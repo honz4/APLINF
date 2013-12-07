@@ -1,0 +1,4 @@
+APLINF
+======
+
+UPOL / Aplikovana informatika
