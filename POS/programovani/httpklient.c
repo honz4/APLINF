@@ -67,6 +67,6 @@ int main(int argc, char *argv[])
     }
     // Uzavřu spojení
     close(mySocket);
-    cout <<  endl << text << endl;
+    cout <<  endl << text << endl; // ahoj z githubu!
     return 0;
 }
