@@ -8,12 +8,15 @@
 #include <sys/socket.h>
 
 #define BUFSIZE 1000
+#define CRLF "\r\n"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-    string text("GET /~drymld/ps/ HTTP/1.1\r\nHost: phoenix.inf.upol.cz\r\nConnection: close");      // Odesílaný a přijímaný text
+    string text("GET /~drymld/ps/ HTTP/1.1" CRLF
+                "Host: phoenix.inf.upol.cz" CRLF
+                "Connection: close" CRLF);      // Odesílaný a přijímaný text
     hostent *host;              // Vzdálený počítač;
     sockaddr_in serverSock;     // Vzdálený "konec potrubí"
     int mySocket;               // Soket
@@ -30,14 +33,14 @@ int main(int argc, char *argv[])
     // Zjistíme info o vzdáleném počítači
     if ((host = gethostbyname(argv[1])) == NULL)
     {
-        cerr << "Špatná adresa" << endl;
-        return -1;
+        cerr << "2: Špatná adresa" << endl;
+        return 2;
     }
     // Vytvoříme soket
     if ((mySocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
     {
-        cerr << "Nelze vytvořit soket" << endl;
-        return -1;
+        cerr << "3: Nelze vytvořit soket" << endl;//TODO zkusit errno a strerror()
+        return 3;
     }
     // Zaplníme strukturu sockaddr_in
 
@@ -52,14 +55,14 @@ int main(int argc, char *argv[])
     // Připojení soketu
     if (connect(mySocket, (sockaddr *)&serverSock, sizeof(serverSock)) == -1)
     {
-        cerr << "Nelze navázat spojení" << endl;
-        return -1;
+        cerr << "3: Nelze navázat spojení" << endl;
+        return 4;
     }
     // Odeslání dat
     if ((size = send(mySocket, text.c_str(), text.size() + 1, 0)) == -1)
     {
-        cerr << "Problém s odesláním dat" << endl;
-        return -1;
+        cerr << "5: Problém s odesláním dat" << endl;
+        return 5;
     }
     cout << "Odesláno " << size << endl;
 
@@ -76,5 +79,5 @@ int main(int argc, char *argv[])
     // Uzavřu spojení
     close(mySocket);
     cout << "delka_hlavicky: " << delka_hlavicky << endl << text << endl;
-    return 0;
+    return EXIT_SUCCESS;
 }
